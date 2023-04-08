@@ -25,7 +25,7 @@ class PDFCollector(BaseCollector):
             "description": str,
         }
 
-    def process(self, pdf_link) -> Production:
+    def process(self, pdf_link, *args, **kwargs) -> Production:
         pdf_path, jsonpath, doc = self._download_pdf_link(pdf_link)
         pdf = PDFFile(path=pdf_path)
         production = Production()
@@ -35,7 +35,7 @@ class PDFCollector(BaseCollector):
         return production
 
     def _download_pdf_link(self, pdf_link):
-        logging.info(f"Downloading {pdf_link}... run papercast extract to create json.")
+        logging.info(f"Downloading {pdf_link}...")
         try:
             wget.download(pdf_link, out=str(self.pdf_dir))
         except HTTPError as e:
