@@ -8,27 +8,26 @@ import wget
 
 from papercast.types import PathLike, PDFFile
 from papercast.production import Production
-from papercast.base import BaseCollector
+from papercast.base import BaseProcessor
 
 
-class PDFCollector(BaseCollector):
+class PDFProcessor(BaseProcessor):
     def __init__(self, pdf_dir: PathLike):
         self.pdf_dir = pdf_dir
 
     input_types = {"pdf_link": str}
     output_types = {
-            "pdf": PDFFile,
-            "title": str,
-            "arxiv_id": str,
-            "authors": list,
-            "doi": str,
-            "description": str,
-        }
+        "pdf": PDFFile,
+        "title": str,
+        "arxiv_id": str,
+        "authors": list,
+        "doi": str,
+        "description": str,
+    }
 
-    def process(self, pdf_link, *args, **kwargs) -> Production:
-        pdf_path, jsonpath, doc = self._download_pdf_link(pdf_link)
+    def process(self, production: Production, *args, **kwargs) -> Production:
+        pdf_path, jsonpath, doc = self._download_pdf_link(production.pdf_link)  # type: ignore
         pdf = PDFFile(path=pdf_path)
-        production = Production()
         setattr(production, "pdf", pdf)
         for k, v in doc.items():
             setattr(production, k, v)
