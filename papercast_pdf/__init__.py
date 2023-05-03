@@ -1,1 +1,1 @@
-from .pdf import PDFProcessor
+from .processors import PDFCollector
